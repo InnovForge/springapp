@@ -44,4 +44,4 @@ nbdist/
 .DS_Store
 Thumbs.db
 
-hibernate.cfg
+src/java/hibernate.cfg.xml
