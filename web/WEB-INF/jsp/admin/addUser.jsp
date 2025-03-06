@@ -34,7 +34,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="basicinput">Email</label>
                                 <div class="controls">
-                                    <form:password class="span8" path="email" id="basicinput" placeholder="Type something here..."/>
+                                    <form:input class="span8" path="email" id="basicinput" placeholder="Type something here..."/>
                                 </div>
                             </div>
                             <div class="control-group">

@@ -24,7 +24,7 @@ import springapp.web.model.Users;
 @Controller
 @RequestMapping(value = "/admin")
 public class UserController {
-  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
  
     private final UserDao dao = new UserDao();
 
@@ -74,5 +74,17 @@ public class UserController {
             return "redirect:/admin/login.html";
         }
     }
-
+    
+//     @RequestMapping(value = "/user/employee", method = RequestMethod.GET)
+//    public String formEmployee(ModelMap model, HttpServletRequest request) {
+//         Users user = (Users) request.getSession().getAttribute("LOGGEDIN_USER");
+//            if (user != null) {
+//            model.addAttribute("user", new Users());
+//            return "admin/addEmployee";
+//        } else {
+//            model.addAttribute("user", new Users());
+//            return "redirect:/admin/login.html";
+//        }
+//
+//    }
 }
