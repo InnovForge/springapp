@@ -28,6 +28,8 @@
                 <li><a href="<%=request.getContextPath()%>/admin/user/list.html"><i class="icon-inbox"></i>All Users </a></li>
                 <li><a href="<%=request.getContextPath()%>/admin/user/add.html"><i class="icon-inbox"></i>Create User</a></li>
                 <li><a href="<%=request.getContextPath()%>/admin/employee/add.html"><i class="icon-inbox"></i>Create employee </a></li>
+                <li><a href="<%=request.getContextPath()%>/admin/employee/update.html"><i class="icon-inbox"></i>Update employee </a></li>
+                <li><a href="<%=request.getContextPath()%>/admin/employee/delete.html"><i class="icon-inbox"></i>Delete employee </a></li>
                 <li><a href="other-user-profile.html"><i class="icon-inbox"></i>Profile </a></li>
                 
             </ul>

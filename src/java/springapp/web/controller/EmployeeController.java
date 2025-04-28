@@ -79,12 +79,82 @@ public class EmployeeController {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String jsonMessage = objectMapper.writeValueAsString(emp);
-                kafka.send("payroll-updated", jsonMessage);
+                kafka.send("payroll-created", jsonMessage);
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("error call kafka");
             }
             dao.insertEmployee(emp);
+            return "redirect:/admin/employee/list.html";
+        } else {
+            model.addAttribute("user", new Users());
+            return "redirect:/admin/login.html";
+        }
+
+    }
+
+    @RequestMapping(value = "/employee/update", method = RequestMethod.GET)
+    public String formEmployeeUpdate(ModelMap model, HttpServletRequest request) {
+        Users user = (Users) request.getSession().getAttribute("LOGGEDIN_USER");
+        if (user != null) {
+            model.addAttribute("employee", new Employee());
+            return "admin/updateEmployee";
+        } else {
+            model.addAttribute("user", new Users());
+            return "redirect:/admin/login.html";
+        }
+
+    }
+
+    @RequestMapping(value = "/employee/update", method = RequestMethod.POST)
+    public String updateEmplyeed(@ModelAttribute(value = "employee") Employee emp, ModelMap model, HttpServletRequest request) {
+        Users userSession = (Users) request.getSession().getAttribute("LOGGEDIN_USER");
+        logger.info("update is run");
+        if (userSession != null) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonMessage = objectMapper.writeValueAsString(emp);
+                kafka.send("payroll-updated", jsonMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("error call kafka");
+            }
+            dao.updateEmployeeById(emp);
+            return "redirect:/admin/employee/list.html";
+        } else {
+            model.addAttribute("user", new Users());
+            return "redirect:/admin/login.html";
+        }
+
+    }
+    
+    @RequestMapping(value = "/employee/delete", method = RequestMethod.GET)
+    public String formEmployeeDelete(ModelMap model, HttpServletRequest request) {
+        Users user = (Users) request.getSession().getAttribute("LOGGEDIN_USER");
+        if (user != null) {
+            model.addAttribute("employee", new Employee());
+            return "admin/deleteEmployee";
+        } else {
+            model.addAttribute("user", new Users());
+            return "redirect:/admin/login.html";
+        }
+
+    }
+
+    @RequestMapping(value = "/employee/delete", method = RequestMethod.POST)
+    public String deleteEmplyee(@ModelAttribute(value = "employee") Employee emp, ModelMap model, HttpServletRequest request) {
+        Users userSession = (Users) request.getSession().getAttribute("LOGGEDIN_USER");
+        logger.info("update is run");
+        if (userSession != null) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonMessage = objectMapper.writeValueAsString(emp);
+                kafka.send("payroll-deleted", jsonMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("error call kafka");
+            }
+            dao.deleteEmployeeById(emp.getIdEmployee());
             return "redirect:/admin/employee/list.html";
         } else {
             model.addAttribute("user", new Users());
