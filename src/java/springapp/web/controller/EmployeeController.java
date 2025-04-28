@@ -5,6 +5,7 @@
  */
 package springapp.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Session;
@@ -16,21 +17,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springapp.web.dao.EmployeeDao;
-import springapp.web.dao.UserDao;
+import springapp.web.kafka.KafkaMessageProducer;
 import springapp.web.model.Employee;
 import springapp.web.model.HibernateUtil;
 import springapp.web.model.Users;
 
 /**
  *
- * @author 
+ * @author
  */
 @Controller
 @RequestMapping(value = "/admin")
 public class EmployeeController {
 
+    KafkaMessageProducer kafka = new KafkaMessageProducer();
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
-    
+
     private final EmployeeDao dao = new EmployeeDao();
 
     @RequestMapping(value = {"/employee/list"}, method = RequestMethod.GET)
@@ -74,9 +76,16 @@ public class EmployeeController {
         Users userSession = (Users) request.getSession().getAttribute("LOGGEDIN_USER");
         logger.info("created is run");
         if (userSession != null) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonMessage = objectMapper.writeValueAsString(emp);
+                kafka.send("payroll-updated", jsonMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("error call kafka");
+            }
             dao.insertEmployee(emp);
             return "redirect:/admin/employee/list.html";
-
         } else {
             model.addAttribute("user", new Users());
             return "redirect:/admin/login.html";
